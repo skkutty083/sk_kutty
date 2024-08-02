@@ -1,2 +1,7 @@
 #!/bin/bash
-echo "hii this is skkutty"
+for i in {1..5}
+do
+	
+       echo "Hello Github"
+done
+
