@@ -1,0 +1,24 @@
+pipeline {
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+              sh 'echo "build is successfull "'
+            }
+        }
+      
+        stage('Test') {
+            steps {
+               sh 'echo "Test stage is successfull"
+            }
+        }
+        stage('Deploy') {
+            steps {
+              sh '''
+              bash ${WORKSPACE}/linux/script.sh
+                echo "Build is successfull"
+                '''
+            }
+        }
+    }
+}
