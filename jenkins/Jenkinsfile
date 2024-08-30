@@ -3,7 +3,10 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-              sh 'echo "build is successfull "'
+              sh '''
+              echo " Build Docker image on `hostname`
+              docker image build -t Skutty:1.0
+              
             }
         }
       
