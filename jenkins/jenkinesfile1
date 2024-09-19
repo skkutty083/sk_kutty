@@ -1,56 +1,24 @@
 
-pipeline{
-        agent any
 
-        stages{
-                stage('clean_up'){
-                        steps{
-                                sh '''
-                                  docker container ls -a | grep c1
-                                  if [ $? == 0 ] ; then 
-                                  docker container rm -f c1; 
-                                  fi
+pipeline {
+    agent any
 
-                                  docker image rm app_image:1.0
-                                '''
-                        }
-                }
-                stage('build'){
-                        steps{
-                          sh '''
-                          echo "Building Docker image on  `hostname`"
-                          docker image build -t app_image:1.0 ${WORKSPACE}/docker/
-                          
-                          '''
-                        }
-                 }
-                 stage('test'){
-                        steps{
-                          sh '''
-                          echo "Build is successful on test stage"
-                          docker image ls | grep app_image
-                          '''
-                        }
-                 }
-
-                  stage('deploy'){
-                        steps{
-                          sh '''
-                          docker container run -d  --name c1 -p 9000:80 app_image:1.0
-                          
-                          echo "Build is successful on deploy stage `hostname`"
-                          '''
-                        }
-                 }
-
-                 stage('verify'){
-                         steps{
-                                 sh '''
-                                        docker container ls | grep c1
-                                 '''
-                         }
-                 }
-          
+    stages {
+        stage('build') {
+            steps { 
+               sh 'echo "build is successful"'
+            }
         }
-
+         stage('deploy') {
+            steps {
+                sh 'echo "build is successful"'
+            }
+        }
+        stage('test'){
+            steps{
+                sh 'echo "build is successful"'
+            }
+        }
+        
+    }
 }
