@@ -1,0 +1,53 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Clean Up') {
+            steps {
+                sh '''
+                    # Check if container c1 exists and remove it
+                    if docker container ls -a | grep -q c4; then 
+                        docker container rm -f c4; 
+                    fi
+
+                    # Remove the Docker image app_image:1.0 if it exists
+                    if docker image ls | grep -q app_image:1.0; then 
+                        docker image rm app_image:1.0; 
+                    fi
+                '''
+            }
+        }
+        stage('Build') {
+            steps {
+                sh '''
+                    echo "Building Docker image on `hostname`"
+                    docker image build -t app_image:1.0 ${WORKSPACE}/docker/
+                '''
+            }
+        }
+        stage('Test') {
+            steps {
+                sh '''
+                    echo "Build is successful on test stage"
+                    docker image ls | grep app_image:1.0
+                '''
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker container run -d --name c4 -p 9000:80 app_image:1.0
+                    echo "Build is successful on deploy stage `hostname`"
+                '''
+            }
+        }
+        stage('Verify') {
+            steps {
+                sh '''
+                    # Verify if the container c4 is running
+                    docker container ls | grep c4
+                '''
+            }
+        }
+    }
+}
