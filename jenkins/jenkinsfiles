@@ -1,0 +1,43 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    // Build the Docker image
+                    sh 'docker build -t my-docker-image .'
+                }
+            }
+        }
+        stage('Deploy') {
+            steps {
+                script {
+                    // Stop and remove any existing container
+                    sh 'docker stop my-container || true'
+                    sh 'docker rm my-container || true'
+
+                    // Run the Docker container
+                    sh 'docker run -d -p 80:80 --name my-container my-docker-image'
+                }
+            }
+        }
+        stage('Test') {
+            steps {
+                script {
+                    // Example test to check if the application is running
+                    // You might want to use a more thorough test in a real scenario
+                    sh 'curl -f http://localhost || exit 1'
+                }
+            }
+        }
+    }
+    post {
+        always {
+            // Clean up Docker resources
+            sh 'docker stop my-container || true'
+            sh 'docker rm my-container || true'
+            sh 'docker rmi my-docker-image || true'
+        }
+    }
+}
