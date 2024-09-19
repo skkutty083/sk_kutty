@@ -1,28 +1,26 @@
-
-
 pipeline {
     agent any
 
     stages {
         stage('build') {
-            steps { 
-               sh '''
-                echo "build is successful"'
+            steps {
+                sh '''
+                echo "Build is successful"
                 docker image build -t app_image:1.0 ${WORKSPACE}/docker/
                 '''
-              
             }
         }
-         stage('deploy') {
+
+        stage('deploy') {
             steps {
-                sh 'echo "build is successful"'
+                sh 'echo "Deployment is successful"'
             }
         }
-        stage('test'){
-            steps{
-                sh 'echo "build is successful"'
+
+        stage('test') {
+            steps {
+                sh 'echo "Testing is successful"'
             }
         }
-        
     }
 }
