@@ -6,7 +6,7 @@ pipeline {
             steps {
                 sh '''
                     # Check if container c1 exists and remove it
-                    if docker container ls -a | grep -q c1; then 
+                    if docker container ls -a | grep -q c4; then 
                         docker container rm -f c1; 
                     fi
 
@@ -36,7 +36,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                    docker container run -d --name c1 -p 9000:80 app_image:1.0
+                    docker container run -d --name c4 -p 9000:80 app_image:1.0
                     echo "Build is successful on deploy stage `hostname`"
                 '''
             }
@@ -44,8 +44,8 @@ pipeline {
         stage('Verify') {
             steps {
                 sh '''
-                    # Verify if the container c1 is running
-                    docker container ls | grep c1
+                    # Verify if the container c4 is running
+                    docker container ls | grep c4
                 '''
             }
         }
