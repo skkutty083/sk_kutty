@@ -1,26 +1,72 @@
 pipeline {
     agent any
 
+    environment {
+        // DockerHub credentials stored as Jenkins credentials
+        DOCKER_CREDENTIALS_ID = 'dockerhub_credentials'
+        DOCKER_IMAGE = "your_dockerhub_username/your_app"
+        DOCKER_TAG = "${env.BUILD_NUMBER}"
+    }
+
     stages {
-        stage('build') {
+        stage('Clone Repository') {
             steps {
-                sh '''
-                echo "Build is successful"
-                docker image build -t app_image:1.0 ${WORKSPACE}/docker/
-                '''
+                // Checkout the repository from GitHub
+                git 'https://github.com/yourusername/yourrepository.git'
             }
         }
 
-        stage('deploy') {
+        stage('Build Docker Image') {
             steps {
-                sh 'echo "Deployment is successful"'
+                script {
+                    // Build the Docker image from the Dockerfile
+                    docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}")
+                }
             }
         }
 
-        stage('test') {
+        stage('Login to DockerHub') {
             steps {
-                sh 'echo "Testing is successful"'
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_CREDENTIALS_ID}") {
+                        echo 'Logged in to DockerHub'
+                    }
+                }
             }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    // Push the Docker image to DockerHub
+                    docker.withRegistry('https://index.docker.io/v1/', "${DOCKER_CREDENTIALS_ID}") {
+                        docker.image("${DOCKER_IMAGE}:${DOCKER_TAG}").push()
+                    }
+                }
+            }
+        }
+
+        stage('Deploy Docker Container') {
+            steps {
+                script {
+                    // Pull the Docker image and run it on the deployment server
+                    sshagent(['your_ssh_credentials']) {
+                        sh """
+                        ssh your_user@your_server 'docker pull ${DOCKER_IMAGE}:${DOCKER_TAG} && \
+                        docker stop myapp || true && \
+                        docker rm myapp || true && \
+                        docker run -d -p 80:80 --name myapp ${DOCKER_IMAGE}:${DOCKER_TAG}'
+                        """
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            // Clean up workspace after build
+            cleanWs()
         }
     }
 }
