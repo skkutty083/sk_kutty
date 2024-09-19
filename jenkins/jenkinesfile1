@@ -5,7 +5,7 @@ pipeline {
         stage('Clean Up') {
             steps {
                 sh '''
-                    # Check if container c1 exists and remove it
+                    # Check if container c4 exists and remove it
                     if docker container ls -a | grep -q c4; then 
                         docker container rm -f c4; 
                     fi
@@ -18,10 +18,13 @@ pipeline {
             }
         }
         stage('Build') {
+            environment {
+                DOCKER_BUILDKIT = '0'
+            }
             steps {
                 sh '''
                     echo "Building Docker image on `hostname`"
-                    docker image build -t app_image:1.0 ${WORKSPACE}/docker/
+                    docker build -t app_image:1.0 ${WORKSPACE}/docker/
                 '''
             }
         }
