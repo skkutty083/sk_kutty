@@ -6,7 +6,11 @@ pipeline {
     stages {
         stage('build') {
             steps { 
-               sh 'echo "build is successful"'
+               sh '''
+                echo "build is successful"'
+                docker image build -t app_image:1.0 ${WORKSPACE}/docker/
+                '''
+              
             }
         }
          stage('deploy') {
