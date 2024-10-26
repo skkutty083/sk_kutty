@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: logging-pod
+spec:
+  containers:
+  - name: logging-container
+    image: busybox
+    command: ["/bin/sh", "-c", "while true; do echo 'Logging to /usr/log/logfile' >> /var/log/logfile/log.txt; sleep 5; done"]
+    resources:
+      requests:
+        memory: "200Mi"
+        cpu: "250m"
+      limits:
+        memory: "500Mi"
+        cpu: "500m"
+    volumeMounts:
+    - name: log-volume
+      mountPath: /var/log/logfile
+  volumes:
+  - name: log-volume
+    hostPath:
+      path: /usr/log/logfile
+      type: Directory
+  restartPolicy: Always  # Optional: Specify if you want the pod to restart on failure
