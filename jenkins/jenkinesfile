@@ -2,7 +2,7 @@ pipeline{
         agent any
 
         stages{
-                stage('clean_up'){
+                stage('clen_up'){
                         steps{
                                 sh '''
                                   docker container ls -a | grep c1
