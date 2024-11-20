@@ -2,18 +2,6 @@ pipeline{
         agent any
 
         stages{
-                stage('clean_up'){
-                        steps{
-                                sh '''
-                                  docker container ls -a | grep c1
-                                  if [ $? == 0 ] ; then 
-                                  docker container rm -f c1; 
-                                  fi
-
-                                  docker image rm app_image:1.0
-                                '''
-                        }
-                }
                 stage('build'){
                         steps{
                           sh '''
@@ -27,7 +15,7 @@ pipeline{
                         steps{
                           sh '''
                           echo "Build is successful on test stage"
-                          docker image ls | grep app_image
+                          docker image ls 
                           '''
                         }
                  }
@@ -45,7 +33,7 @@ pipeline{
                  stage('verify'){
                          steps{
                                  sh '''
-                                        docker container ls | grep c1
+                                        docker container ls 
                                  '''
                          }
                  }
