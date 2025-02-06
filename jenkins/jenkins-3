@@ -18,7 +18,7 @@ pipeline {
 public class StringMatch {
     public static void main(String[] args) {
         String input = args[0];  // Get the string from command line argument
-        if ("nitin".equals(input)) {
+        if ("Sanjai".equals(input)) {
             System.out.println("correct");
         } else {
             System.out.println("wrong");
@@ -27,7 +27,7 @@ public class StringMatch {
 }
                     """
                     
-                    // Compile and run the Java code, passing the string parameter
+                    // Compile and run the Java code, passing the string parameter//
 
                 }
             }
