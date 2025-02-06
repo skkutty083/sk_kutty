@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    
+    parameters {
+        string(name: 'string', defaultValue: 'defaultString', description: 'Enter a string for matching')
+    }
+    
+    stages {
+        stage('String Matching Parameter') {
+            steps {
+                script {
+                    // Access the Jenkins parameter
+                    stringParam = params.string
+                    echo "Input string: ${stringParam}"
+
+                    // Create a temporary Java file with StringMatch logic
+                    writeFile file: 'StringMatch.java', text: """
+public class StringMatch {
+    public static void main(String[] args) {
+        String input = args[0];  // Get the string from command line argument
+        if ("sanjai".equals(input)) {
+            System.out.println("correct");
+        } else {
+            System.out.println("wrong");
+        }
+    }
+}
+                    """
+                    
+                    // Compile and run the Java code, passing the string parameter
+                    sh 'javac StringMatch.java'
+                    sh "java StringMatch ${stringParam}"
+                }
+            }
+        }
+    }
+}
