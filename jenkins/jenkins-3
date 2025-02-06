@@ -28,8 +28,7 @@ public class StringMatch {
                     """
                     
                     // Compile and run the Java code, passing the string parameter
-                    sh 'javac StringMatch.java'
-                    sh "java StringMatch ${stringParam}"
+
                 }
             }
         }
