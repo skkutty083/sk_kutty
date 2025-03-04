@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('User Input') {
+            steps {
+                script {
+                    def userInput = input(
+                        message: 'Do you want to proceed with the build?',
+                        parameters: [
+                            choice(name: 'CONFIRM', choices: ['Yes', 'No'], description: 'Select Yes to continue, No to abort')
+                        ]
+                    )
+
+                    if (userInput == 'No') {
+                        error('Build aborted by user.')
+                    } else {
+                        echo 'User confirmed. Proceeding with the pipeline...'
+                    }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Running tests...'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                echo 'Deploying application...'
+            }
+        }
+    }
+}
