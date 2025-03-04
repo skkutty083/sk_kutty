@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+
+    environment {
+        USER_CHOICE = ''
+    }
+
+    stages {
+        stage('User Input') {
+            steps {
+                script {
+                    USER_CHOICE = input(
+                        message: 'Do you want to proceed with the build?',
+                        parameters: [
+                            choice(name: 'CONFIRM', choices: ['Yes', 'No'], description: 'Select Yes to continue, No to abort')
+                        ]
+                    )
+                }
+                
+                sh '''
+                if [ "$USER_CHOICE" == "No" ]; then
+                    echo "Build aborted by user."
+                    exit 1
+                else
+                    echo "User confirmed. Proceeding with the pipeline..."
+                fi
+                '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'echo "Building the project..."'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'echo "Running tests..."'
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh 'echo "Deploying application..."'
+            }
+        }
+    }
+}
