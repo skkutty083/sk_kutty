@@ -1,6 +1,7 @@
-FROM nginx:alpine
-# For Vue/Angular use /app/dist; for React use /app/build
-COPY --from=builder /app/dist /usr/share/nginx/html
-# COPY --from=builder /app/build /usr/share/nginx/html
-EXPOSE 800
-CMD ["nginx", "-g", "daemon off;"]
+FROM ubuntu:22.04
+RUN apt update && apt install apache2 -y
+ADD http://mnptechnologies.com/  /var/www/html/
+EXPOSE 80
+ENV MY_PATH=/root/
+ENTRYPOINT [ "/bin/bash", "-c", "service apache2 start && bash" ]
+
