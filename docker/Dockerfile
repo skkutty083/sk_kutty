@@ -1,4 +1,4 @@
-# Dockerfile
+# Dockerfile (do NOT paste this into Jenkins shell)
 FROM node:18 AS builder
 WORKDIR /app
 COPY package*.json ./
