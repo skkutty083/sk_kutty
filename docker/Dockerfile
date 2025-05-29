@@ -1,5 +1,5 @@
 # Build the React app using Node 24.1.0
-FROM node:24.1.0 AS builder
+FROM node:24.1.0`
 WORKDIR /app
 COPY . .
 RUN npm install
