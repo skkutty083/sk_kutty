@@ -1,6 +1,12 @@
-FROM ubuntu:22.04
-RUN apt update && apt install apache2 -y
-ADD http://mnptechnologies.com/  /var/www/html/
+# Dockerfile
+FROM node:18 AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm install
+COPY . .
+RUN npm run build
+
+FROM nginx:alpine
+COPY --from=builder /app/build /usr/share/nginx/html
 EXPOSE 80
-ENV MY_PATH=/root/
-ENTRYPOINT [ "/bin/bash", "-c", "service apache2 start && bash" ]
+CMD ["nginx", "-g", "daemon off;"]
