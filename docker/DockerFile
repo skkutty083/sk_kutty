@@ -2,5 +2,5 @@ FROM nginx:alpine
 # For Vue/Angular use /app/dist; for React use /app/build
 COPY --from=builder /app/dist /usr/share/nginx/html
 # COPY --from=builder /app/build /usr/share/nginx/html
-EXPOSE 80
+EXPOSE 800
 CMD ["nginx", "-g", "daemon off;"]
